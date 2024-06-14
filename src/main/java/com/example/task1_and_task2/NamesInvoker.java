@@ -3,13 +3,13 @@ package com.example.task1_and_task2;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class NamesInvoker {
     private final Collection<String> names = new ArrayList<>();
+    private final AtomicInteger counter = new AtomicInteger();
 
     private static int getNumberFromLine(String line) {
         String[] parts = line.split("\\.", 2);
@@ -21,13 +21,17 @@ public class NamesInvoker {
         return parts[1];
     }
 
-    public static NameFilter filterOddNumberedNames = line -> getNumberFromLine(line) % 2 != 0;
+    public static Predicate<String> evenNumberedNames =
+            line -> getNumberFromLine(line) % 2 == 0;
 
-    public static NameFilter filterEvenNumberedNames = line -> getNumberFromLine(line) % 2 == 0;
+    public static Predicate<String> oddNumberedNames =
+            line -> getNumberFromLine(line) % 2 != 0;
 
-    public static NameSort sortLowerToHigh = (String o1, String o2) -> getNameFromLine(o1).compareTo(getNameFromLine(o2));
+    public static Comparator<String> lowToHigh = (o1, o2) ->
+            getNameFromLine(o1).compareTo(getNameFromLine(o2));
 
-    public static NameSort sortHighToLower = (String o1, String o2) -> getNameFromLine(o2).compareTo(getNameFromLine(o1));
+    public static Comparator<String> highToLow = (o1, o2) ->
+            getNameFromLine(o2).compareTo(getNameFromLine(o1));
 
     public NamesInvoker(File filePath) {
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -36,24 +40,24 @@ public class NamesInvoker {
                 names.add(line);
             }
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+            System.err.println("Error reading file: " + ex.getMessage());
         }
     }
 
-    public Collection<String> getFilteredNames(NameFilter filter) {
-        AtomicInteger index = new AtomicInteger(1);
+    public Collection<String> getFilteredNames(Predicate<String> filter) {
+        counter.set(1);
         return names.stream()
-                .map(name -> index.getAndIncrement() + "." + name)
-                .filter(filter::filter)
+                .map(name -> counter.getAndIncrement() + "." + name)
+                .filter(filter)
                 .collect(Collectors.toList());
     }
 
-    public Collection<String> getSortedNames(NameSort sort) {
-        AtomicInteger index = new AtomicInteger(1);
+    public Collection<String> getSortedNames(Comparator<String> comparator) {
+        counter.set(1);
         return names.stream()
-                .map(name -> index.getAndIncrement() + "." + name)
+                .map(name -> counter.getAndIncrement() + "." + name)
                 .map(String::toUpperCase)
-                .sorted(sort)
+                .sorted(comparator)
                 .collect(Collectors.toList());
     }
 
