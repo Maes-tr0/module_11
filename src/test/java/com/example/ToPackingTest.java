@@ -1,15 +1,17 @@
 package com.example;
 
-import com.example.task5.ToPacking;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import java.util.List;
+import static com.example.task5.ToPacking.interleaveStreams;
 
 public class ToPackingTest {
     public static void main(String[] args) {
-        List<String> list1 = List.of("1", "2", "3", "4", "5", "6", "7", "8", "9");
-        List<String> list2 = List.of("0", "0", "0", "0", "0", "0", "0");
+        Stream<Integer> firstStream = Stream.of(1, 3, 5);
+        Stream<Integer> secondStream = Stream.of(2, 4, 6, 8, 10, 12);
 
-        List<String> shuffledResult = ToPacking.shuffleStreams(list1.stream(), list2.stream()).toList();
-        System.out.println(shuffledResult);
+        Stream<Integer> resultStream = interleaveStreams(firstStream, secondStream);
+        String result = resultStream.map(String::valueOf).collect(Collectors.joining(", "));
+        System.out.println("Результат: " + result);
     }
 }
