@@ -1,17 +1,32 @@
 package com.example;
 
 import com.example.task1_and_task2.NamesInvoker;
+
 import java.util.List;
 
 public class NamesInvokerTest {
     public static void main(String[] args) {
-        String filePath = "src/main/resources/java/com/example/task1_and_task2/names.txt";
-        NamesInvoker invoker = new NamesInvoker(filePath);
+        List<String> names = List.of(
+                "Alexander",
+                "Maria",
+                "Dmitry",
+                "Elena",
+                "Ivan",
+                "Natalia",
+                "Sergey",
+                "Julia",
+                "Andrew",
+                "Victoria"
+        );
 
-        String namesString = invoker.getNamesString();
-        System.out.println("Original string with names: " + namesString);
+        NamesInvoker invoker = new NamesInvoker(names);
 
-        List<String> sortedNamesList = invoker.getSortedNamesList();
-        System.out.println("Sorted list names: " + sortedNamesList);
+        System.out.println(invoker.getNames());
+
+        System.out.println("\nNames on odd index: " + invoker.filterNameWithAnOddIndex());
+        System.out.println("Names on Even index: " + invoker.filterNameWithAnEvenIndex());
+
+        System.out.println("\nNames sorted by Descending Order: " + invoker.getUpperCaseNamesInDescendingOrder());
+        System.out.println("Names sorted by Ascending Order: " + invoker.getUpperCaseNamesInAscendingOrder());
     }
 }

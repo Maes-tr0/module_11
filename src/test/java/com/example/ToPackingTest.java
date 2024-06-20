@@ -1,17 +1,15 @@
 package com.example;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.example.task5.ToPacking;
 
-import static com.example.task5.ToPacking.interleaveStreams;
+import java.util.stream.Stream;
 
 public class ToPackingTest {
     public static void main(String[] args) {
-        Stream<Integer> firstStream = Stream.of(1, 3, 5);
-        Stream<Integer> secondStream = Stream.of(2, 4, 6, 8, 10, 12);
+        Stream<String> stream1 = Stream.of("A", "B", "C", "D", "E", "F");
+        Stream<String> stream2 = Stream.of("1", "2", "3");
 
-        Stream<Integer> resultStream = interleaveStreams(firstStream, secondStream);
-        String result = resultStream.map(String::valueOf).collect(Collectors.joining(", "));
-        System.out.println("Результат: " + result);
+        Stream<String> zippedStream = ToPacking.zip(stream1, stream2);
+        zippedStream.forEach(System.out::println);
     }
 }

@@ -1,37 +1,65 @@
 package com.example.task1_and_task2;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class NamesInvoker {
     private final List<String> names;
 
-    public NamesInvoker(String filePath) {
-        this.names = readNamesFromFile(filePath);
-    }
-
-    private List<String> readNamesFromFile(String filePath) {
-        try {
-            return Files.readAllLines(Paths.get(filePath));
-        } catch (IOException ex) {
-            System.err.println("Error reading file: " + ex.getMessage());
-            return Collections.emptyList();
-        }
-    }
-
-    public String getNamesString() {
-        return String.join(", ", names);
-    }
-
-    public List<String> getSortedNamesList() {
-        return names.stream()
-                .sorted()
+    public NamesInvoker(List<String> names) {
+        AtomicInteger counter = new AtomicInteger();
+        this.names = names.stream()
+                .map(name -> counter.incrementAndGet() + ". " + name)
                 .toList();
     }
 
-    @Override
-    public String toString() {
-        return getNamesString();
+    private String listToString(List<String> result) {
+        StringJoiner sj = new StringJoiner(", ");
+        for (String name : result) {
+            sj.add(name);
+        }
+        return sj.toString();
+    }
+
+    private int getIndexInLine(String name) {
+        return Integer.parseInt(name.split("\\.")[0]);
+    }
+
+    private String getNameInLine(String name) {
+        return name.split("\\.")[1];
+    }
+
+    public String filterNameWithAnOddIndex() {
+        List<String> result = names.stream()
+                .filter(line -> getIndexInLine(line) % 2 != 0)
+                .toList();
+        return listToString(result);
+    }
+
+    public String filterNameWithAnEvenIndex() {
+        List<String> result = names.stream()
+                .filter(line -> getIndexInLine(line) % 2 == 0)
+                .toList();
+        return listToString(result);
+    }
+
+    public List<String> getNames() {
+        return List.copyOf(names);
+    }
+
+    public List<String> getUpperCaseNamesInDescendingOrder() {
+        return names.stream()
+                .map(name -> getNameInLine(name).toUpperCase())
+                .sorted(Comparator.reverseOrder())
+                .toList();
+    }
+
+    public List<String> getUpperCaseNamesInAscendingOrder() {
+        return names.stream()
+                .map(name -> getNameInLine(name).toUpperCase())
+                .sorted(Comparator.naturalOrder())
+                .toList();
     }
 }
