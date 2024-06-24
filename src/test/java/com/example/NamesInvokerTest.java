@@ -19,14 +19,12 @@ public class NamesInvokerTest {
                 "Victoria"
         );
 
-        NamesInvoker invoker = new NamesInvoker(names);
+        NamesInvoker invoker = new NamesInvoker();
 
-        System.out.println(invoker.getNames());
+        System.out.println("\nNames on odd index: " + invoker.filterNameWithAnOddIndex(names));
+        System.out.println("Names on Even index: " + invoker.filterNameWithAnEvenIndex(names));
 
-        System.out.println("\nNames on odd index: " + invoker.filterNameWithAnOddIndex());
-        System.out.println("Names on Even index: " + invoker.filterNameWithAnEvenIndex());
-
-        System.out.println("\nNames sorted by Descending Order: " + invoker.getUpperCaseNamesInDescendingOrder());
-        System.out.println("Names sorted by Ascending Order: " + invoker.getUpperCaseNamesInAscendingOrder());
+        System.out.println("\nNames sorted by Descending Order: " + invoker.getUpperCaseNamesInDescendingOrder(names));
+        System.out.println("Names sorted by Ascending Order: " + invoker.getUpperCaseNamesInAscendingOrder(names));
     }
 }
